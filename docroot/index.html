@@ -24,9 +24,9 @@
 
             <button type="button"
                     class="btn btn-primary"
-                    @click="showUsers = !showUsers"
-                    v-tooltip="'Use this button to ' + (showUsers ? 'hide' : 'show') + ' users'" >
-              {{ showUsers ? 'Hide users' : 'Show users' }}
+                    v-on:click="toggleUsersList()"
+                    v-tooltip="tooltipText" >
+              {{ buttonText }}
             </button>
             <hr />
 
@@ -46,7 +46,11 @@
               <tr v-for="(user, index) in users">
                 <th scope="row">{{ index }}</th>
                 <td>
-                  <img v-if="user.avatar" :src="user.avatar">
+                  <img class="rounded-circle"
+                       width="100"
+                       v-if="user.avatar"
+                       v-bind:src="user.avatar"
+                       v-bind:alt="user.firstName + ' avatar'">
                   <span v-else>No avatar</span>
                 </td>
                 <td>{{ user.firstName }}</td>
@@ -74,8 +78,40 @@
       el: '#app',
       template: '#template',
       data: {
+        users: [],
+        showUsers: true,
+      },
+      methods: {
+        fio: function (user) {
+          return user.firstName + ' ' + user.middleName + ' ' + user.lastName;
+        },
+        toggleUsersList: function () {
+          this.showUsers = !this.showUsers;
+        },
+      },
+      computed: {
+        usersCount: function () {
+          return this.users.length;
+        },
+        buttonText: function () {
+          return this.showUsers ? 'Hide users' : 'Show users'
+        },
+        tooltipText: function () {
+          return 'Use this button to ' + (this.showUsers ? 'hide' : 'show') + ' users';
+        },
+      },
+      filters: {
+        uppercase: function (value) {
+          if (!value) {
+            return '';
+          }
+
+          return value.toUpperCase();
+        }
+      },
+      mounted: function () {
         // https://reqres.in/
-        users: [
+        this.users = [
           {
             firstName: 'Michael',
             middleName: 'Charles',
@@ -106,28 +142,8 @@
             lastName: 'Edwards',
             avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/mrmoiree/128.jpg',
           },
-        ],
-        showUsers: true,
-      },
-      methods: {
-        fio: function (user) {
-          return user.firstName + ' ' + user.middleName + ' ' + user.lastName;
-        },
-      },
-      computed: {
-        usersCount: function () {
-          return this.users.length;
-        },
-      },
-      filters: {
-        uppercase: function (value) {
-          if (!value) {
-            return '';
-          }
-
-          return value.toUpperCase();
-        }
-      },
+        ];
+      }
     })
   </script>
 
