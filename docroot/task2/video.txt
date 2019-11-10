@@ -1,0 +1,33 @@
+логику из шаблона выносить в методы и вычисляемые свойства
+
+в вычисляемых свойствах только синхронная логика
+запросы на сервер в методах
+
+вычисляемые свойства кэшируются
+
+вычисляемые свойства только на чтение
+
+добавлять event listeners в mounted
+
+если хочется асинхронщину в computed - vue-async-computed
+или watch - следить за изменением айдишника пользователя, отправлять запрос на сервер за данными другого пользователя (асинхронная зависимость)
+
+модификаторы событий - .prevent (preventDefault); .stop (stopPropagation)
+чтобы в методах, реагирующих на события, не делать привязку к событию
+keyup.enter; .esc
+
+модификаторы v-model
+v-model.trim; v-model.number; v-model.lazy
+<input type="text" v-bind:value="title" v-on:input="title = $event.target.value">
+===
+<input type="text" v-model="title">
+
+checkboxes and selects
+checked and selected attributes - not needed at all :) binding on these attributes is not needed; use v-model on data
+
+components - dividing in smaller parts
+input params (v-bind) -> props - type and required validation + default for optional params
+data - function returning object
+input props are read-only, shouldn't be mutated
+this.$emit('remove', id) - to generate event
+v-on:click.native - to listen for native events on components

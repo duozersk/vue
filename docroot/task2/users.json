@@ -1,0 +1,32 @@
+[
+  {
+    "firstName": "Michael",
+    "middleName": "Charles",
+    "lastName": "Lawson",
+    "avatar": null
+  },
+  {
+    "firstName": "Lindsay",
+    "middleName": "John",
+    "lastName": "Ferguson",
+    "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/araa3185/128.jpg"
+  },
+  {
+    "firstName": "Tobias",
+    "middleName": "Chris",
+    "lastName": "Funke",
+    "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/vivekprvr/128.jpg"
+  },
+  {
+    "firstName": "Byron",
+    "middleName": "Graig",
+    "lastName": "Fields",
+    "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/russoedu/128.jpg"
+  },
+  {
+    "firstName": "George",
+    "middleName": "Thomas",
+    "lastName": "Edwards",
+    "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/mrmoiree/128.jpg"
+  }
+]

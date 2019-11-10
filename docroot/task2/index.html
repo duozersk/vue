@@ -6,21 +6,24 @@
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-  <title>Vue application</title>
+  <title>Users list</title>
+
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/v-copy@0.1.0/dist/v-copy.min.js"></script>
   <script src="https://unpkg.com/v-tooltip"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
-<template id="template">
+
+<div id="app"></div>
+
+<template id="app-template">
   <div class="container">
     <div class="row">
       <div class="col">
 
-        <h1>Vue application</h1>
-
-        <p>Total users: {{ usersCount }}</p>
+        <h1>Users list</h1>
 
         <button type="button"
                 class="btn btn-primary"
@@ -30,69 +33,76 @@
         </button>
         <hr />
 
-        <table v-if="showUsers" class="table table-striped table-hover">
-          <caption>List of users</caption>
-          <thead class="thead-dark">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Avatar</th>
-            <th scope="col">First</th>
-            <th scope="col">Middle</th>
-            <th scope="col">Last</th>
-            <th scope="col">Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(user, index) in users">
-            <th scope="row">{{ index }}</th>
-            <td>
-              <img class="rounded-circle"
-                   width="100"
-                   v-if="user.avatar"
-                   v-bind:src="user.avatar"
-                   v-bind:alt="user.firstName + ' avatar'">
-              <span v-else>No avatar</span>
-            </td>
-            <td>{{ user.firstName }}</td>
-            <td>{{ user.middleName }}</td>
-            <td>{{ user.lastName | uppercase }}</td>
-            <td>
-              <button type="button"
-                      v-copy="fio(user)">
-                Copy
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <user-list v-if="showUsers" v-bind:users="users"></user-list>
 
       </div>
     </div>
   </div>
 </template>
 
-<div id="app"></div>
+<template id="user-list-template">
+  <table class="table table-striped table-hover">
+    <caption>Total users: {{ usersCount }}</caption>
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Avatar</th>
+      <th scope="col">First</th>
+      <th scope="col">Middle</th>
+      <th scope="col">Last</th>
+      <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="(user, index) in users">
+      <th scope="row">{{ index }}</th>
+      <td>
+        <img class="rounded-circle"
+             width="100"
+             v-if="user.avatar"
+             v-bind:src="user.avatar"
+             v-bind:alt="user.firstName + ' avatar'">
+        <span v-else>No avatar</span>
+      </td>
+      <td>{{ user.firstName }}</td>
+      <td>{{ user.middleName }}</td>
+      <td>{{ user.lastName | uppercase }}</td>
+      <td>
+        <button type="button"
+                class="btn btn-secondary"
+                v-copy="fio(user)">
+          Copy
+        </button>
+        <a role="button"
+           class="btn btn-warning"
+           v-bind:href="'user-edit.html?userId=' + index">
+          Edit
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</template>
 
 <script>
   var app = new Vue({
     el: '#app',
-    template: '#template',
+    template: '#app-template',
     data: {
       users: [],
       showUsers: true,
     },
     methods: {
-      fio: function (user) {
-        return user.firstName + ' ' + user.middleName + ' ' + user.lastName;
-      },
       toggleUsersList: function () {
         this.showUsers = !this.showUsers;
       },
+      usersChanged: function () {
+        if (this.users.length !== 0) {
+          console.log('Users were successfully loaded.');
+        }
+      },
     },
     computed: {
-      usersCount: function () {
-        return this.users.length;
-      },
       buttonText: function () {
         return this.showUsers ? 'Hide users' : 'Show users'
       },
@@ -100,50 +110,50 @@
         return 'Use this button to ' + (this.showUsers ? 'hide' : 'show') + ' users';
       },
     },
-    filters: {
-      uppercase: function (value) {
-        if (!value) {
-          return '';
-        }
-
-        return value.toUpperCase();
-      }
-    },
     mounted: function () {
       // https://reqres.in/
-      this.users = [
-        {
-          firstName: 'Michael',
-          middleName: 'Charles',
-          lastName: 'Lawson',
-          avatar: null,
+      var self = this;
+      axios.get('users.json')
+        .then(function (response) {
+          self.users = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    watch: {
+      users: 'usersChanged',
+    },
+    components: {
+      'user-list': {
+        template: '#user-list-template',
+        props: {
+          users: {
+            type: Array,
+            required: true,
+          },
         },
-        {
-          firstName: 'Lindsay',
-          middleName: 'John',
-          lastName: 'Ferguson',
-          avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/araa3185/128.jpg',
+        methods: {
+          fio: function (user) {
+            return user.firstName + ' ' + user.middleName + ' ' + user.lastName;
+          },
         },
-        {
-          firstName: 'Tobias',
-          middleName: 'Chris',
-          lastName: 'Funke',
-          avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/vivekprvr/128.jpg',
+        computed: {
+          usersCount: function () {
+            return this.users.length;
+          },
         },
-        {
-          firstName: 'Byron',
-          middleName: 'Graig',
-          lastName: 'Fields',
-          avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/russoedu/128.jpg',
+        filters: {
+          uppercase: function (value) {
+            if (!value) {
+              return '';
+            }
+
+            return value.toUpperCase();
+          },
         },
-        {
-          firstName: 'George',
-          middleName: 'Thomas',
-          lastName: 'Edwards',
-          avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/mrmoiree/128.jpg',
-        },
-      ];
-    }
+      },
+    },
   })
 </script>
 

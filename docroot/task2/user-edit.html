@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <title>User edit</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+
+<div id="app"></div>
+
+<template id="app-template">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+
+        <h1>User edit</h1>
+
+        <user-form v-if="users.length" v-bind:user="users[userId]"></user-form>
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="user-form-template">
+  <div>
+    <input type="text" v-model="user.firstName" key="firstName">
+    <input type="text" v-model="user.middleName" key="middleName">
+    <input type="text" v-model="user.lastName" key="lastName">
+
+    <hr>
+
+    <a class="btn btn-primary" href="index.html">Save</a>
+    <a class="btn btn-danger" href="index.html">Cancel</a>
+  </div>
+</template>
+
+<script>
+  var app = new Vue({
+    el: '#app',
+    template: '#app-template',
+    data: {
+      users: [],
+      userId: 0,
+    },
+    methods: {},
+    computed: {},
+    filters: {},
+    mounted: function () {
+      var uri = window.location.search.substring(1);
+      var params = new URLSearchParams(uri);
+      this.userId = params.get('userId');
+
+      // https://reqres.in/
+      var self = this;
+      axios.get('users.json')
+        .then(function (response) {
+          self.users = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    components: {
+      'user-form': {
+        template: '#user-form-template',
+        props: {
+          user: {
+            type: Object,
+            required: true,
+          },
+        },
+      },
+    },
+  })
+</script>
+</body>
+</html>
