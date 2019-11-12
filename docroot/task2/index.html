@@ -8,10 +8,10 @@
 
   <title>Users list</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/v-copy@0.1.0/dist/v-copy.min.js"></script>
-  <script src="https://unpkg.com/v-tooltip"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/v-tooltip@2.0.2/dist/v-tooltip.min.js"></script>
+  <script src="https://unpkg.com/axios@0.19.0/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -54,7 +54,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="(user, index) in users">
+    <tr v-for="(user, index) in users" v-bind:key="user.id">
       <th scope="row">{{ index }}</th>
       <td>
         <img class="rounded-circle"
@@ -85,12 +85,62 @@
 </template>
 
 <script>
+  var userList = {
+    template: '#user-list-template',
+    props: {
+      users: {
+        type: Array,
+        required: true,
+      },
+    },
+    computed: {
+      usersCount: function () {
+        return this.users.length;
+      },
+    },
+    filters: {
+      uppercase: function (value) {
+        if (!value) {
+          return '';
+        }
+
+        return value.toUpperCase();
+      },
+    },
+    methods: {
+      fio: function (user) {
+        return user.firstName + ' ' + user.middleName + ' ' + user.lastName;
+      },
+    },
+  };
+
   var app = new Vue({
     el: '#app',
     template: '#app-template',
+    mounted: function () {
+      var self = this;
+      axios.get('users.json')
+        .then(function (response) {
+          self.users = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
     data: {
       users: [],
       showUsers: true,
+    },
+    computed: {
+      buttonText: function () {
+        return this.showUsers ? 'Hide users' : 'Show users'
+      },
+      tooltipText: function () {
+        return 'Use this button to ' + (this.showUsers ? 'hide' : 'show') + ' users';
+      },
+    },
+    watch: {
+      users: 'usersChanged',
     },
     methods: {
       toggleUsersList: function () {
@@ -102,57 +152,8 @@
         }
       },
     },
-    computed: {
-      buttonText: function () {
-        return this.showUsers ? 'Hide users' : 'Show users'
-      },
-      tooltipText: function () {
-        return 'Use this button to ' + (this.showUsers ? 'hide' : 'show') + ' users';
-      },
-    },
-    mounted: function () {
-      // https://reqres.in/
-      var self = this;
-      axios.get('users.json')
-        .then(function (response) {
-          self.users = response.data;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    watch: {
-      users: 'usersChanged',
-    },
     components: {
-      'user-list': {
-        template: '#user-list-template',
-        props: {
-          users: {
-            type: Array,
-            required: true,
-          },
-        },
-        methods: {
-          fio: function (user) {
-            return user.firstName + ' ' + user.middleName + ' ' + user.lastName;
-          },
-        },
-        computed: {
-          usersCount: function () {
-            return this.users.length;
-          },
-        },
-        filters: {
-          uppercase: function (value) {
-            if (!value) {
-              return '';
-            }
-
-            return value.toUpperCase();
-          },
-        },
-      },
+      'user-list': userList,
     },
   })
 </script>

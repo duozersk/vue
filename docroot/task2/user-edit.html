@@ -8,8 +8,8 @@
 
   <title>User edit</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios@0.19.0/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -44,22 +44,24 @@
 </template>
 
 <script>
+  var userForm = {
+    template: '#user-form-template',
+    props: {
+      user: {
+        type: Object,
+        required: true,
+      },
+    },
+  };
+
   var app = new Vue({
     el: '#app',
     template: '#app-template',
-    data: {
-      users: [],
-      userId: 0,
-    },
-    methods: {},
-    computed: {},
-    filters: {},
     mounted: function () {
       var uri = window.location.search.substring(1);
       var params = new URLSearchParams(uri);
       this.userId = params.get('userId');
 
-      // https://reqres.in/
       var self = this;
       axios.get('users.json')
         .then(function (response) {
@@ -69,16 +71,12 @@
           console.log(error);
         });
     },
+    data: {
+      users: [],
+      userId: 0,
+    },
     components: {
-      'user-form': {
-        template: '#user-form-template',
-        props: {
-          user: {
-            type: Object,
-            required: true,
-          },
-        },
-      },
+      'user-form': userForm,
     },
   })
 </script>
