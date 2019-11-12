@@ -127,9 +127,11 @@
           console.log(error);
         });
     },
-    data: {
-      users: [],
-      showUsers: true,
+    data: function () {
+      return {
+        users: [],
+        showUsers: true,
+      };
     },
     computed: {
       buttonText: function () {

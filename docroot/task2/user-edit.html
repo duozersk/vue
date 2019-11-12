@@ -71,9 +71,11 @@
           console.log(error);
         });
     },
-    data: {
-      users: [],
-      userId: 0,
+    data: function () {
+      return {
+        users: [],
+        userId: 0,
+      };
     },
     components: {
       'user-form': userForm,
