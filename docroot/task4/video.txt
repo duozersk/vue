@@ -1,0 +1,32 @@
+single-page application -> into one bundle
+how to implement code splitting / dynamic components loading/import
+
+Code Splitting by webpack
+import() in routes; or in components property of Vue component
+
+router-link-exact-active and router-link-active classes for router links
+<router-link tag="li" active-class="active">
+exact
+exact-active-class
+
+linkActiveClass
+linkExactActiveClass
+in router configuration object
+
+dynamic routes
+path: "/edit/:id"
+
+code logic into methods -> then call method in mounted hook
+
+do not mutate incoming props
+
+v-model === v-bind:value + v-on:input => use v-model on custom components
+you can re-define model binding (value) and event (input) on component level
+
+Authorization
+Json Web Token - JWT - to not allow load secure data to non authorized users
+Protect pages - routes meta data
+router has navigational hooks
+router.beforeEach()
+
+JSON-server -> POST with id = 0 -> creates new user
