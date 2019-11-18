@@ -1,0 +1,84 @@
+link/reference to DOM element
+external plugins / wrappers for them
+slots
+form validation / data validation
+
+external plugins - awesome vue - list of plugins
+
+how to get the DOM element in context of component template - ref attribute
+this.$refs.calendar === DOM element from this component with ref="calendar"
+
+all plugins are of 2 types:
+- showing smth, like graphs, etc.
+- backlinking data
+
+initialize + emit input (model configured) event
+
+lots of conditions - initialize / destroy -> memory leaks -> beforeDestroy / destroyed hooks
+
+if we update incoming props -> we need to let plugin know about it
+if we initialize plugin -> we need to clean up when the component is destroyed
+
+do not try to implement universal wrappers - for single date picker use one wrapper; for date range picker -> another wrapper
+less code -> more value
+
+jquery -> webpack can add jquery globally via some options
+
+SLOTS
+markup inside of component tags
+<slot></slot> - it will render markup between component tags - default slot
+
+<slot name="header"></slot>
+<slot name="footer"></slot>
+
+<template slot="header">
+markup for header slot
+</template>
+
+redefine parts of component markup
+
+scoped slots - you can bind some things from child component to parent component to get access to them from slots
+<slot name="table-row" :item="item">
+</slot> 
+
+<template slot="table-row" slot-scope="{ item }">
+</template>
+
+NEW SLOTS SYNTAX
+<template v-slot:header></template>
+<template v-slot:table-row="{ item }">
+</template>
+
+FORM DATA VALIDATION
+Check form data for some rules - like required data, etc.
+
+AJV - the fastest JSON schema validator
+learn the API and use it
+
+VALIDATION PLUGINS
+- vuelidate
+- veevalidate
+
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
+import { required, email } from 'vee-validate/dist/rules'
+
+extend('required', required)
+extend('email', email)
+
+Vue.component('ValidationProvider', ValidationProvider)
+Vue.component('ValidationObserver', ValidationObserver)
+
+<ValidationProvider name="Name" rules="required" v-slot="props">
+{{ props.errors[0] }}
+</validationProvider>
+
+
+
+<ValidationObserver ref="validationObserver"></>
+
+async save() {
+  const isValid = await this.$refs.validationObserver.validate()
+}
+
+
+User avatar component
