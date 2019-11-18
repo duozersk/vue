@@ -6,8 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "fake": "json-server --host 0.0.0.0 --watch db.json --port 3004",
-    "lib": "vue-cli-service build --target lib --name myLib src/main.js"
+    "fake": "json-server --host 0.0.0.0 --watch db.json --port 3004"
   },
   "dependencies": {
     "axios": "^0.19.0",

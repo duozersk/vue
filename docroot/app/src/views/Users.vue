@@ -27,12 +27,10 @@ export default {
   },
   methods: {
     loadData() {
-      axios
-        .get('http://localhost:3004/users')
-        .then(({ data }) => {
-          this.users = data
-        })
-        // .catch(error => console.error(error))
+      axios.get('http://localhost:3004/users').then(({ data }) => {
+        this.users = data
+      })
+      // .catch(error => console.error(error))
     }
   }
 }
