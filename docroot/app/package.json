@@ -9,7 +9,7 @@
     "fake": "json-server --host 0.0.0.0 --watch db.json --port 3004"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.3.1",
     "core-js": "^3.3.2",
     "vue": "^2.6.10",
